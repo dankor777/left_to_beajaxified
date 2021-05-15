@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<center>
+  {%if searched%}
+    <h1> Szukasz: {{searched}} </h1>
+  {%else%}
+   <h1> eh..
+  {%endif%}
+  {% for post in posts %}
+  <div class="card">
+    <div class="card-header">
+      {{post.tytul}}
+    </div>
+    <div class="card-body">
+      <blockquote class="blockquote mb-0">
+        <p>{{ post.tresc|truncatechars:180 }}</p>
+        <footer class="blockquote-footer">{{post.id_autora}} </footer>
+      </blockquote>
+    </div>
+  </div>
+  <a href="{%url 'post_detail' post.pk %}" class="btn btn-info">Czytaj</a>
+  <hr>
+  {%endfor%}
+{%endblock%}

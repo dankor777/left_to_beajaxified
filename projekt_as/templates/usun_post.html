@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{%block content%}
+{%if user.is_authenticated%}
+<h1> usun post</h1>
+<hr>
+<br>
+<h3> Delete {{ post.tytul}}</h3>
+
+
+<div class="form-group">
+<form method="post">
+  {%csrf_token%}
+  {{form.as_p}}
+  <button class="btn btn-primary">Usun post</button>
+  </div>
+</form>
+{%endif%}
+{%endblock%}

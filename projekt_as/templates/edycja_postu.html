@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{%block content%}
+{% if user.is_authenticated%}
+<h1> edytuj post</h1>
+<hr>
+<br>
+<div class="form-group">
+<form method="post">
+  {%csrf_token%}
+  {{form.as_p}}
+  <button class="btn btn-primary">Edytuj</button>
+  </div>
+{%else%}
+<h1> nie masz uprawnien</h1>
+{%endif%}
+{%endblock%}

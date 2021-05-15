@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block content %}
+<form class="form-inline my-2 my-lg-0" method="POST" action="{% url 'searchPosts' %}">
+  {%csrf_token%}
+   <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="searched">
+   <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+ </form>
+<h1>Posty</h1>
+<hr>
+<ul>
+
+{% for p in object_list %}
+<div class="card">
+  <div class="card-header">
+    {{p.tytul}}
+  </div>
+  <div class="card-body">
+    <blockquote class="blockquote mb-0">
+      <p>{{ p.tresc|truncatechars:180 }}</p>
+      <footer class="blockquote-footer">{{p.id_autora}} </footer>
+    </blockquote>
+  </div>
+</div>
+  <br><br/>
+      <a href="{%url 'post_detail' p.id %}" class="btn btn-info">Czytaj</a>
+      {% ifequal user.groups.all.0.name "Admini" %}
+            <a href="{% url 'edytuj_post' p.pk %}" class="btn btn-info" style="margin-left:15px;">Edytuj</a>
+      <a href="{% url 'usun_post' p.pk %}" class="btn btn-info" style="margin-left:15px;">Usun</a>{% endifequal %}
+    <hr>
+{%endfor%}
+</ul>
+{%if is_paginated %}
+  {% if page_obj.has_previous %}
+<a class="btn btn-outline-info mb-4" href="?page=1">Pierwsza</a>
+<a class="btn btn-outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Poprzednia</a>
+  {%endif%}
+  {%for num in page_obj.paginator.page_range%}
+    {% if page_obj.number == num %}
+      <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+      <a class="btn btn-outline-info mb-4" href="?page={{num}}">{{num}}</a>
+    {% endif %}
+  {%endfor%}
+{% if page_obj.has_next %}
+  <a class="btn btn-outline-info mb-4" href="?page={{page_obj.next_page_number}}">Nastepna</a>
+  <a class="btn btn-outline-info mb-4" href="?page={{page_obj.paginator.num_pages}}">Ostatnia</a>
+{%endif%}
+{%endif%}
+{%endblock%}

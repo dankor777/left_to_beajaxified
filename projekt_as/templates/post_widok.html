@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{%block content%}
+
+<h1> {{post.tytul}} </h1>
+<small> Przez: {{post.id_autora}} </small>
+<hr>
+<br/>
+<h3>{{post.tresc}}<h3/>
+  <br>
+  <h2> Komentarze: </h2>
+  <hr>
+  <div class="main-comments-section">
+    {{comments.count}} Komentarz{{comments|pluralize}}
+    {%for comment in comments%}
+    <br><br>
+    <hr>
+    <blockquote class="blockquote">
+      <p class="mb-0">{{comment.content}}</p>
+      <footer class="blockquote-footer">By <cite title="Source Title">{{comment.user|capfirst}}</cite>
+          <button type="button" name="button" class="reply-btn btn-outline-success btn-sm">odpowiedz</button>
+      </footer>
+    </blockquote>
+    <div class="replied-comments container mt-2" style="display:none;">
+      {% for reply in comment.replies.all%}
+        <blockquote class="blockquote" style="margin-left:15px;">
+        <p class="ml-0"><Small>{{reply.content}}</small></p>
+        <footer class="blockquote-footer"><small>By <cite title="Source Title">{{reply.user|capfirst}}</cite></small>
+        </footer>
+      </blockquote>
+      {%endfor%}
+      <div class="form-group row">
+        <form method="post">
+          {%csrf_token%}
+          <input type="hidden" name="comment_id" value="{{comment.id}}">
+          {{comment_form.as_p}}
+          {% if request.user.is_authenticated%}
+          <input type="submit" value ="Wyslij" class="btn btn-outline-success">
+          {%else%}
+          <input type="submit" value ="Wyslij" class="btn btn-outline-success" disabled>
+          {%endif%}
+        </form>
+    </div>
+    </div>
+    {%endfor%}
+    <br>
+    <hr>
+    <h1> Napisz Komentarz:
+    {% if request.user.is_authenticated%}
+    <form method="post">
+      {%csrf_token%}
+      {{comment_form.as_p}}
+      <input type="submit" value ="Wyslij" class="btn btn-outline-success">
+      {%else%}
+      <input type="submit" value ="Wyslij" class="btn btn-outline-success" disabled>
+      </form>
+      {%endif%}
+      </div>
+{%endblock%}
